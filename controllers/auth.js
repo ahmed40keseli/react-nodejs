@@ -49,29 +49,6 @@ const login = async (req, res) => {
       return res.status(500).json({ message: error.message });
     }
   };
-  
-
-// const login = async(req,res) =>{ // async: a senkron olmasını sağlar, giriş işlemleri için kullanılır
-//  try {
-//     const {email,user_password} = req.body ; // kullanıcıdan gelen cevaplar 
-//     const user = await Auth.findOne({ where: { email } });
-//     if(!user){ // email databasede olmadığı zaman 
-//         return res.status(500).json({message: "boyle bir kullanici bulunamadis"})//döneceği yanıt
-//     }
-//     if(user_password !== user.user_password){
-//         return res.status(500).json({message:"Incorrect password"})
-//     }
-
-//     res.status(200).json({
-//         status: "OK",
-//         user,
-//         user_password
-//     })
-
-//  } catch (error) {
-//     return res.status(500).json({message:error.message})
-//  }   
-// }
 
 const deleteAccount =async(req,res) => {
     try {
@@ -127,69 +104,3 @@ const passwordReviz = async (req, res) => {
 };
 
 module.exports = {register,login,deleteAccount,passwordReviz}
-
-// const Auth = require('../models/auth')
-// const jwt = require('jsonwebtoken');
-
-// const test = (req,res) => {
-//     res.json('test is working')
-// }
-
-// const registerUser = async (req,res) => {
-//     try {
-//         const {name, email, password} = req.body
-//         if(!name) {
-//             return res.json({
-//                 error: 'name is required'
-//             });
-//         }
-//         if(!password || password.lenght < 6 ){
-//             return res.json({
-//                 error: 'password is required and should be at least 6 characters long '
-//             });
-//         }
-//         const exist = await Auth.findOne({email});
-//         if (exist) {
-//             return res.json({
-//                 error:'email is taken already'
-//             })
-//         }
-//         const user = await Auth.create({
-//             user,
-//             email,
-//             password
-//         })
-//         return res.json(user)
-//     } catch (error) {
-//         console.log(error)
-//     }
-// }
-
-// const loginUser = async (req, res) => {
-//     try {
-//         const {email, password} = req.body;
-//         const user = await Auth.findOne({email});
-//         if(!user) {
-//             return res.json({
-//                 error: 'no user found'
-//             })  
-//         }
-
-//         const match = await comparePassword(password, user.password)
-//         if(match){
-//             jwt.sign({email:user.email, id:user._id, name:user.name},)
-//         }
-//         if(!match){
-//             res.json({
-//                 error:'passwords do not match '
-//             })
-//         }
-//     } catch (error) {
-//         console.log(error)
-//     }
-// }
-// module.exports = {
-//     test,
-//     registerUser,
-//     loginUser
-// }
