@@ -6,5 +6,6 @@ router.post('/register',userController.register);
 router.post('/login',userController.login);
 router.post('/deleteAccount',userController.deleteAccount);
 router.post('/passwordReviz/:email',userController.passwordReviz);
+router.post('/Cregister',userController.Cregister);
 
 module.exports = router;

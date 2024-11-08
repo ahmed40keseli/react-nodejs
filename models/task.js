@@ -20,6 +20,11 @@ const Task = sequelize.define('Task',
     completed:{
       allowNull:false,
       type:DataTypes.BOOLEAN
+    },
+    referansNo:{
+      type : DataTypes.INTEGER,
+      autoIncrement:false,
+      allowNull:false,
     }
   },
 );

@@ -1,23 +1,60 @@
 const Auth = require('../models/auth.js');
 // const jwt = require('jsonwebtoken');
 
-const register = async(req,res) => { // async = asenkron olmasını sağlar, kayıt işlemleri için
+const Cregister = async(req,res) => { // async = asenkron olmasını sağlar, kayıt işlemleri için
     try {
-        const {username,email,user_password} = req.body // dışarıdan req beklediğimiz değerler
+        const {username,email,user_password,referansNo} = req.body // dışarıdan req beklediğimiz değerler
         const user = await Auth.findOne({ where: { email } });
+        const referansnumber = await Auth.findOne({ where: { referansNo } });
+
 
         if(user){
             return res.status(500).json({message: 'bu hesap zaten var'})
+        }
+        if (referansnumber){
+            return res.status(500).json({message: 'bu referans numarasi zaten var'})
+        }
+        if (referansNo.length < 6 ) {
+            return res.status(500).json({message:"referans numarasi 6 haneden fazla olmali"})
         }
         if ( user_password.length < 6) {
             return res.status(500).json({message:"parolaniz 6 haneden fazla olmali"})
         }
         
-        const newUser = await Auth.create({username,email,user_password})//yeni kayıt işlemini gerçekleştirir
+        const newUser = await Auth.create({username,email,user_password,referansNo})//yeni kayıt işlemini gerçekleştirir
 
         res.status(201).json({ // true dönen değerlerin içeriği 
             status: "OK",
             newUser,
+            referansNo
+        })
+
+    }catch (error) {
+        return res.status(500).json({message: error.message})//hata mesajı içeriği vs.    
+    }
+}
+
+const register = async(req,res) => { // async = asenkron olmasını sağlar, kayıt işlemleri için
+    try {
+        const {username,email,user_password,referansNo} = req.body // dışarıdan req beklediğimiz değerler
+        const user = await Auth.findOne({ where: { email } });
+
+        if(user){
+            return res.status(500).json({message: 'bu hesap zaten var'})
+        }
+        if (referansNo.length < 6 ) {
+            return res.status(500).json({message:"referans numarasi 6 haneden fazla olmali"})
+        }
+        if ( user_password.length < 6) {
+            return res.status(500).json({message:"parolaniz 6 haneden fazla olmali"})
+        }
+        
+        const newUser = await Auth.create({username,email,user_password,referansNo})//yeni kayıt işlemini gerçekleştirir
+
+        res.status(201).json({ // true dönen değerlerin içeriği 
+            status: "OK",
+            newUser,
+            referansNo
         })
 
     }catch (error) {
@@ -103,4 +140,4 @@ const passwordReviz = async (req, res) => {
     }
 };
 
-module.exports = {register,login,deleteAccount,passwordReviz}
+module.exports = {register,login,deleteAccount,passwordReviz,Cregister}
