@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db.js');
+const sequelize = require('../config/database.js');
 
 const Task = sequelize.define('Task',
   {
@@ -21,10 +21,21 @@ const Task = sequelize.define('Task',
       allowNull:false,
       type:DataTypes.BOOLEAN
     },
-    referansNo:{
-      type : DataTypes.INTEGER,
-      autoIncrement:false,
+    assignProfile:{
+      type : DataTypes.STRING,
       allowNull:false,
+    },
+    startDate:{
+      type : DataTypes.DATE,
+      allowNull:true,
+    },
+    endDate:{
+      type : DataTypes.DATE,
+      allowNull:true,
+    },
+    reminderDate:{
+      type : DataTypes.DATE,
+      allowNull:true,
     }
   },
 );

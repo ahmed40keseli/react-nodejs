@@ -1,12 +1,16 @@
 const Task = require('../models/task.js');
 
 exports.creatTask = (req, res, next) => {
-    const { title, description, completed } = req.body;
+    const { title, description, completed, assignProfile, startDate, endDate, reminderDate } = req.body;
 
     Task.create({
         title: title,
         description: description,
         completed: completed,
+        assignProfile:assignProfile,
+        startDate:startDate,
+        endDate:endDate,
+        reminderDate:reminderDate
     })
     .then(result => {
         res.status(201).json({ message: "Task created successfully", task: result });

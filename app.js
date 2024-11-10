@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const User = require('./routes/auth.js');
-// const Task = require('./routes/task.js'); 
+const Task = require('./routes/task.js'); 
 // const bodyParser = require('body-parser');
 // const cookieParser = require('cookie-parser')
 require('dotenv').config();
@@ -30,6 +30,6 @@ app.use(cors());
 // });
 
 app.use('/',User);
-// app.use('/',Task);
+app.use('/',Task);
 
 module.exports = app;
