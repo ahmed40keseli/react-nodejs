@@ -1,7 +1,6 @@
 const Auth = require('../models/auth.js');
-// const jwt = require('jsonwebtoken');
 
-const Cregister = async(req,res) => { // async = asenkron olmasını sağlar, kayıt işlemleri için
+const Cregister = async(req,res) => { 
     try {
         const {username,email,user_password,referansNo} = req.body // dışarıdan req beklediğimiz değerler
         const user = await Auth.findOne({ where: { email } });
@@ -32,7 +31,7 @@ const Cregister = async(req,res) => { // async = asenkron olmasını sağlar, ka
     }catch (error) {
         return res.status(500).json({message: error.message})//hata mesajı içeriği vs.    
     }
-}
+};
 
 const register = async(req,res) => { // async = asenkron olmasını sağlar, kayıt işlemleri için
     try {
@@ -60,7 +59,7 @@ const register = async(req,res) => { // async = asenkron olmasını sağlar, kay
     }catch (error) {
         return res.status(500).json({message: error.message})//hata mesajı içeriği vs.    
     }
-}
+};
 
 const login = async (req, res) => {
     try {
@@ -74,18 +73,24 @@ const login = async (req, res) => {
       if (user_password !== user.user_password) {
         return res.status(500).json({ message: "Incorrect password" });
       }
-  
-      // You could generate and return a token here if using JWT
+
+    // const usersWithSameReferansNo = await Auth.findAll({
+    //     where: { referansNo },
+    //     attributes: ['username', 'referansNo'],
+    // });
+
+    // const userList = usersWithSameReferansNo.map((user) => user.username);
   
       res.status(200).json({
         status: "OK",
-        user,  // send user data if needed
+        user,
+        userList
       });
   
     } catch (error) {
       return res.status(500).json({ message: error.message });
     }
-  };
+};
 
 const deleteAccount =async(req,res) => {
     try {
@@ -108,7 +113,7 @@ const deleteAccount =async(req,res) => {
         console.error('Error deleting user:', error);
         return { status: 'error', message: 'An error occurred while processing your request.' };
     }
-}
+};
 
 const passwordReviz = async (req, res) => {
     try {
