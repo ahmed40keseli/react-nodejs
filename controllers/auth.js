@@ -66,24 +66,34 @@ const login = async (req, res) => {
       const { email, user_password } = req.body;
       const user = await Auth.findOne({ where: { email } });
   
+    //   console.log(user);    
+    //   console.log(user.username);
+
+
       if (!user) {
         return res.status(500).json({ message: "User not found" });
       }
-  
+      
+        console.log("user_password",user_password);
+        console.log("user.dataValues.user_password",user.dataValues.user_password);
+        console.log("user.user_password",user.user_password)
+
       if (user_password !== user.user_password) {
         return res.status(500).json({ message: "Incorrect password" });
       }
 
-    // const usersWithSameReferansNo = await Auth.findAll({
-    //     where: { referansNo },
-    //     attributes: ['username', 'referansNo'],
-    // });
-
-    // const userList = usersWithSameReferansNo.map((user) => user.username);
+      console.log("user.referansNo",user.referansNo)
+      const referansNo = user.referansNo
+    const usersWithSameReferansNo = await Auth.findAll({
+        where: { referansNo },
+        attributes: ['username', 'referansNo'],
+    });
+    console.log("usersWithSameReferansNo",usersWithSameReferansNo);
+    const userList = usersWithSameReferansNo.map((user) => user.username);
+    console.log("usersWithSameReferansNo22222",usersWithSameReferansNo);
   
       res.status(200).json({
         status: "OK",
-        user,
         userList
       });
   
