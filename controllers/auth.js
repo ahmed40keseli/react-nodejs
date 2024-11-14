@@ -33,6 +33,15 @@ const Cregister = async(req,res) => {
     }
 };
 
+const getAuth = async (req, res) => {
+    try {
+        const auths = await Auth.findAll();
+        res.status(200).json({ auths });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 const register = async(req,res) => { // async = asenkron olmasını sağlar, kayıt işlemleri için
     try {
         const {username,email,user_password,referansNo} = req.body // dışarıdan req beklediğimiz değerler
@@ -155,4 +164,4 @@ const passwordReviz = async (req, res) => {
     }
 };
 
-module.exports = {register,login,deleteAccount,passwordReviz,Cregister}
+module.exports = {register,login,deleteAccount,passwordReviz,Cregister,getAuth}

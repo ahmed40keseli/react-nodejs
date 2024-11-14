@@ -2,6 +2,7 @@ const express = require('express');
 const userController = require('../controllers/auth.js');
 const router = express.Router();
 
+router.get('/getAuth',userController.getAuth);
 router.post('/register',userController.register);
 router.post('/login',userController.login);
 router.post('/deleteAccount',userController.deleteAccount);
