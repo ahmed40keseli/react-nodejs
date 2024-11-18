@@ -36,6 +36,20 @@ const Cregister = async(req,res) => {
 const getAuth = async (req, res) => {
     try {
         const auths = await Auth.findAll();
+        let allReferansNoKey = ['username','referansNo']
+
+        const newArray = auths.map(item => {
+            let newItem = {};
+            allReferansNoKey.forEach(key => {
+              if (item[key] !== undefined) {
+                newItem[key] = item[key];
+              }
+            });
+            return newItem;
+          });
+
+          console.log(newArray);
+        
         res.status(200).json({ auths });
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -73,37 +87,19 @@ const register = async(req,res) => { // async = asenkron olmasını sağlar, kay
 const login = async (req, res) => {
     try {
       const { email, user_password } = req.body;
-      const user = await Auth.findOne({ where: { email } });
+      const user = await Auth.findAll({ where: { email } });
   
-    //   console.log(user);    
-    //   console.log(user.username);
-
-
       if (!user) {
         return res.status(500).json({ message: "User not found" });
       }
-      
-        console.log("user_password",user_password);
-        console.log("user.dataValues.user_password",user.dataValues.user_password);
-        console.log("user.user_password",user.user_password)
 
       if (user_password !== user.user_password) {
         return res.status(500).json({ message: "Incorrect password" });
       }
 
-      console.log("user.referansNo",user.referansNo)
-      const referansNo = user.referansNo
-    const usersWithSameReferansNo = await Auth.findAll({
-        where: { referansNo },
-        attributes: ['username', 'referansNo'],
-    });
-    console.log("usersWithSameReferansNo",usersWithSameReferansNo);
-    const userList = usersWithSameReferansNo.map((user) => user.username);
-    console.log("usersWithSameReferansNo22222",usersWithSameReferansNo);
-  
       res.status(200).json({
         status: "OK",
-        userList
+        
       });
   
     } catch (error) {
