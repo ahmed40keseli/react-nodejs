@@ -18,16 +18,13 @@ const Task = sequelize.define('Task',
       allowNull:true
     },
     completed:{
-      allowNull:false,
-      type:DataTypes.BOOLEAN
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
     },
     assignProfile:{
       type : DataTypes.STRING,
       allowNull:false,
-    },
-    startDate:{
-      type : DataTypes.DATE,
-      allowNull:true,
     },
     endDate:{
       type : DataTypes.DATE,

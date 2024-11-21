@@ -1,27 +1,37 @@
 const Task = require('../models/task.js');
 // const assProfile = require('./auth.js');
 
-exports.creatTask = (req, res, next) => {
-    // const { title, description, completed, assignProfile, startDate, endDate, reminderDate } = req.body;
-    const { title, description, completed, assignProfile, endDate, reminderDate } = req.body;
+// exports.creatTask = (req, res, next) => {
+//     // const { title, description, completed, assignProfile, startDate, endDate, reminderDate } = req.body;
+//     const { title, description, completed, assignProfile, endDate, reminderDate } = req.body;
 
 
-    Task.create({
-        title: title,
-        description: description,
-        completed: completed,
-        assignProfile:assignProfile,
-        // startDate:startDate,
-        endDate:endDate,
-        reminderDate:reminderDate
-    })
-    .then(result => {
-        res.status(201).json({ message: "Task created successfully", task: result });
-    })
-    .catch(err => {
-        console.error('Error creating task:', err);
-        res.status(500).json({ message: "Error creating task" });
-    });
+//     Task.create({
+//         title: title,
+//         description: description,
+//         completed: completed,
+//         assignProfile:assignProfile,
+//         // startDate:startDate,
+//         endDate:endDate,
+//         reminderDate:reminderDate
+//     })
+//     .then(result => {
+//         res.status(201).json({ message: "Task created successfully", task: result });
+//     })
+//     .catch(err => {
+//         console.error('Error creating task:', err);
+//         res.status(500).json({ message: "Error creating task" });
+//     });
+// };
+
+exports.createTask = async (req, res) => {
+    try {
+        const task = await Task.create(req.body);
+        res.status(201).json({ message: "Task created successfully", task });
+    } catch (err) {
+        console.error("Error creating task:", err);
+        res.status(500).json({ message: "Error creating task", error: err.message });
+    }
 };
 
 exports.getTasks = async (req, res) => {

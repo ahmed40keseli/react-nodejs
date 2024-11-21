@@ -88,61 +88,54 @@ const register = async(req,res) => { // async = asenkron olmasını sağlar, kay
     }
 };
 
+const login = async (req, res) => {
+    try {
+        const { email, user_password } = req.body;
+        const user = await Auth.findOne({ where: { email } });
+
+        if (!user) {
+            return res.status(500).json({ message: "User not found" });
+        }
+
+        if (user_password !== user.user_password) {
+            return res.status(500).json({ message: "Incorrect password" });
+        }
+
+        // Basit bir token olarak kullanıcı ID'sini gönder
+        res.status(200).json({
+            user: { id: user.id, name: user.username },
+            token: user.id, // Şimdilik basit bir ID kullanıyoruz
+        });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+};
+
+
 // const login = async (req, res) => {
 //     try {
 //       const { email, user_password } = req.body;
 //       const user = await Auth.findOne({ where: { email } });
-
-//       if (user_password !== user.user_password) {
-//         return res.status(500).json({ message: "Incorrect password" });
-//       }  
   
 //       if (!user) {
 //         return res.status(500).json({ message: "User not found" });
 //       }
-
-//       const token = jwt.sign(
-//         // { userId: user.userId, email: user.email },
-//         { email: user.email }, // payload
-//         process.env.JWT_SECRET, // gizli anahtar
-//         { expiresIn: '1h' } // token süresi
-//         );
   
-      
+//       if (user_password !== user.user_password) {
+//         return res.status(500).json({ message: "Incorrect password" });
+//       }
+  
+//       // You could generate and return a token here if using JWT
+  
 //       res.status(200).json({
 //         status: "OK",
-//         token,  // send user data if needed
+//         user,  // send user data if needed
 //       });
   
 //     } catch (error) {
 //       return res.status(500).json({ message: error.message });
 //     }
-// };
-
-const login = async (req, res) => {
-    try {
-      const { email, user_password } = req.body;
-      const user = await Auth.findOne({ where: { email } });
-  
-      if (!user) {
-        return res.status(500).json({ message: "User not found" });
-      }
-  
-      if (user_password !== user.user_password) {
-        return res.status(500).json({ message: "Incorrect password" });
-      }
-  
-      // You could generate and return a token here if using JWT
-  
-      res.status(200).json({
-        status: "OK",
-        user,  // send user data if needed
-      });
-  
-    } catch (error) {
-      return res.status(500).json({ message: error.message });
-    }
-  };
+//   };
 
 const deleteAccount =async(req,res) => {
     try {
