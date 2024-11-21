@@ -2,14 +2,16 @@ const Task = require('../models/task.js');
 // const assProfile = require('./auth.js');
 
 exports.creatTask = (req, res, next) => {
-    const { title, description, completed, assignProfile, startDate, endDate, reminderDate } = req.body;
+    // const { title, description, completed, assignProfile, startDate, endDate, reminderDate } = req.body;
+    const { title, description, completed, assignProfile, endDate, reminderDate } = req.body;
+
 
     Task.create({
         title: title,
         description: description,
         completed: completed,
         assignProfile:assignProfile,
-        startDate:startDate,
+        // startDate:startDate,
         endDate:endDate,
         reminderDate:reminderDate
     })
