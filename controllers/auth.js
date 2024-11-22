@@ -1,5 +1,5 @@
 const Auth = require('../models/auth.js');
-const jwt = require('jsonwebtoken');
+// const jwt = require('jsonwebtoken');
 
 const Cregister = async(req,res) => { 
     try {
@@ -88,54 +88,51 @@ const register = async(req,res) => { // async = asenkron olmasını sağlar, kay
     }
 };
 
-const login = async (req, res) => {
-    try {
-        const { email, user_password } = req.body;
-        const user = await Auth.findOne({ where: { email } });
-
-        if (!user) {
-            return res.status(500).json({ message: "User not found" });
-        }
-
-        if (user_password !== user.user_password) {
-            return res.status(500).json({ message: "Incorrect password" });
-        }
-
-        // Basit bir token olarak kullanıcı ID'sini gönder
-        res.status(200).json({
-            user: { id: user.id, name: user.username },
-            token: user.id, // Şimdilik basit bir ID kullanıyoruz
-        });
-    } catch (error) {
-        return res.status(500).json({ message: error.message });
-    }
-};
-
-
 // const login = async (req, res) => {
 //     try {
-//       const { email, user_password } = req.body;
-//       const user = await Auth.findOne({ where: { email } });
-  
-//       if (!user) {
-//         return res.status(500).json({ message: "User not found" });
-//       }
-  
-//       if (user_password !== user.user_password) {
-//         return res.status(500).json({ message: "Incorrect password" });
-//       }
-  
-//       // You could generate and return a token here if using JWT
-  
-//       res.status(200).json({
-//         status: "OK",
-//         user,  // send user data if needed
-//       });
-  
+//         const { email, user_password } = req.body;
+//         const user = await Auth.findOne({ where: { email } });
+
+//         if (!user) {
+//             return res.status(500).json({ message: "User not found" });
+//         }
+
+//         if (user_password !== user.user_password) {
+//             return res.status(500).json({ message: "Incorrect password" });
+//         }
+
+//         // Basit bir token olarak kullanıcı ID'sini gönder
+//         res.status(200).json({
+//             user: {name: user.username },
+//             token
+//         });
 //     } catch (error) {
-//       return res.status(500).json({ message: error.message });
+//         return res.status(500).json({ message: error.message });
 //     }
-//   };
+// };
+
+const login = async (req, res) => {
+    try {
+      const { email, user_password } = req.body;
+      const user = await Auth.findOne({ where: { email } });
+  
+      if (!user) {
+        return res.status(500).json({ message: "User not found" });
+      }
+  
+      if (user_password !== user.user_password) {
+        return res.status(500).json({ message: "Incorrect password" });
+      }
+  
+      res.status(200).json({
+        status: "OK",
+        user,
+      });
+  
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+};
 
 const deleteAccount =async(req,res) => {
     try {
