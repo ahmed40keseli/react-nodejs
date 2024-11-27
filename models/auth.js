@@ -24,6 +24,10 @@ const User = sequelize.define('User',
     referansNo:{
       type:DataTypes.INTEGER,
       allowNull: false,
+    },
+    token: {
+      type: DataTypes.STRING,
+      allowNull: true,
     }
   },
 );

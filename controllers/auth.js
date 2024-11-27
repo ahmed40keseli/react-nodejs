@@ -1,5 +1,5 @@
 const Auth = require('../models/auth.js');
-// const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 
 const Cregister = async(req,res) => { 
     try {
@@ -123,10 +123,20 @@ const login = async (req, res) => {
       if (user_password !== user.user_password) {
         return res.status(500).json({ message: "Incorrect password" });
       }
+
+      const token = jwt.sign({ userId: user.userId }, process.env.JWT_SECRET, {
+        expiresIn: '5m',
+        }); 
+
+        await user.update({ token });   
   
       res.status(200).json({
         status: "OK",
-        user,
+        token,
+        user: {
+            username: user.username,
+            email: user.email,
+        },
       });
   
     } catch (error) {
