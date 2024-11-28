@@ -60,9 +60,9 @@ const getAuth = async (req, res) => {
     }
 };
 
-const register = async(req,res) => { // async = asenkron olmasını sağlar, kayıt işlemleri için
+const register = async(req,res) => {
     try {
-        const {username,email,user_password,referansNo} = req.body // dışarıdan req beklediğimiz değerler
+        const {username,email,user_password,referansNo} = req.body
         const user = await Auth.findOne({ where: { email } });
 
         if(user){
@@ -75,16 +75,16 @@ const register = async(req,res) => { // async = asenkron olmasını sağlar, kay
             return res.status(500).json({message:"parolaniz 6 haneden fazla olmali"})
         }
         
-        const newUser = await Auth.create({username,email,user_password,referansNo})//yeni kayıt işlemini gerçekleştirir
+        const newUser = await Auth.create({username,email,user_password,referansNo})
 
-        res.status(201).json({ // true dönen değerlerin içeriği 
+        res.status(201).json({
             status: "OK",
             newUser,
             referansNo
         })
 
     }catch (error) {
-        return res.status(500).json({message: error.message})//hata mesajı içeriği vs.    
+        return res.status(500).json({message: error.message}) 
     }
 };
 
@@ -110,6 +110,7 @@ const register = async(req,res) => { // async = asenkron olmasını sağlar, kay
 //         return res.status(500).json({ message: error.message });
 //     }
 // };
+
 
 const login = async (req, res) => {
     try {
