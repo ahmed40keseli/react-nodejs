@@ -44,16 +44,13 @@ const getAuth = async (req, res) => {
             allReferansNoKey.forEach(key => {
               if (item[key] !== undefined) {
                 newItem[key] = item[key];
-                console.log("newItemasdasdadada   ",newItem);
+                // console.log("newItemasdasdadada   ",newItem);
               }
             });
             return newItem;
             
           });
-
-          console.log("newArraysdadadasdad",newArray);
-
-        
+        //   console.log("newArraysdadadasdad",newArray);
         res.status(200).json({ newArray });
     } catch (error) {
         res.status(500).json({ message: error.message });
