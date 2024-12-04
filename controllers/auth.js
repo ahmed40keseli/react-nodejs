@@ -1,5 +1,5 @@
 const Auth = require('../models/auth.js');
-const jwt = require('jsonwebtoken');
+// const jwt = require('jsonwebtoken');
 
 const Cregister = async(req,res) => { 
     try {
@@ -85,30 +85,6 @@ const register = async(req,res) => {
     }
 };
 
-// const login = async (req, res) => {
-//     try {
-//         const { email, user_password } = req.body;
-//         const user = await Auth.findOne({ where: { email } });
-
-//         if (!user) {
-//             return res.status(500).json({ message: "User not found" });
-//         }
-
-//         if (user_password !== user.user_password) {
-//             return res.status(500).json({ message: "Incorrect password" });
-//         }
-
-//         // Basit bir token olarak kullanıcı ID'sini gönder
-//         res.status(200).json({
-//             user: {name: user.username },
-//             token
-//         });
-//     } catch (error) {
-//         return res.status(500).json({ message: error.message });
-//     }
-// };
-
-
 const login = async (req, res) => {
     try {
       const { email, user_password } = req.body;
@@ -121,20 +97,12 @@ const login = async (req, res) => {
       if (user_password !== user.user_password) {
         return res.status(500).json({ message: "Incorrect password" });
       }
-
-      const token = jwt.sign({ userId: user.userId }, process.env.JWT_SECRET, {
-        expiresIn: '5m',
-        }); 
-
-        await user.update({ token });   
+  
+      // You could generate and return a token here if using JWT
   
       res.status(200).json({
         status: "OK",
-        token,
-        user: {
-            username: user.username,
-            email: user.email,
-        },
+        user,  // send user data if needed
       });
   
     } catch (error) {
