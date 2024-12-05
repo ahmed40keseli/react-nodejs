@@ -87,6 +87,7 @@ const register = async(req,res) => {
     }
 };
 
+
 const login = async (req, res) => {
     try {
       const { email, user_password } = req.body;
@@ -99,21 +100,55 @@ const login = async (req, res) => {
       if (user_password !== user.user_password) {
         return res.status(500).json({ message: "Incorrect password" });
       }
-      
-      const token = jwt.sign({ user }, process.env.JWT_SECRET, { expiresIn: "1h" });
 
-      res.json({ token });
+      const token = jwt.sign({ userId: user.userId }, process.env.JWT_SECRET, {
+        expiresIn: '5m',
+        }); 
+
+        await user.update({ token });   
   
       res.status(200).json({
         status: "OK",
-        user,
-        token  
+        token,
+        user: {
+            username: user.username,
+            email: user.email,
+        },
       });
   
     } catch (error) {
-    //   return res.status(500).json({ message: error.message });
+      return res.status(500).json({ message: error.message });
     }
 };
+
+
+// const login = async (req, res) => {
+//     try {
+//       const { email, user_password } = req.body;
+//       const user = await Auth.findOne({ where: { email } });
+  
+//       if (!user) {
+//         return res.status(500).json({ message: "User not found" });
+//       }
+  
+//       if (user_password !== user.user_password) {
+//         return res.status(500).json({ message: "Incorrect password" });
+//       }
+      
+//       const token = jwt.sign({ user }, process.env.JWT_SECRET, { expiresIn: "1h" });
+
+//       res.json({ token });
+  
+//       res.status(200).json({
+//         status: "OK",
+//         user,
+//         token  
+//       });
+  
+//     } catch (error) {
+//     //   return res.status(500).json({ message: error.message });
+//     }
+// };
 
 const deleteAccount =async(req,res) => {
     try {

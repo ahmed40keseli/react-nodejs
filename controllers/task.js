@@ -6,16 +6,11 @@ require('dotenv').config();
 exports.createTask = async (req, res) => {
     try {
         const token = req.headers["authorization"];
+        console.log("token",token);
+        
         if (!token) {
             return res.status(401).json({ message: "Token gerekli" });
           }
-          jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-            if (err) {
-              return res.status(403).json({ message: "Geçersiz token" });
-            }
-        
-            res.json({ message: `Merhaba ${decoded.username}, burası korunan bir sayfadır.` });
-          });
           
         const task = await Task.create(req.body);
         console.log("Gelen token doğrulandı:", req.user);
