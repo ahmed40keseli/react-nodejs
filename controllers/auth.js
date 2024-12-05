@@ -1,5 +1,7 @@
 const Auth = require('../models/auth.js');
-// const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
+
 
 const Cregister = async(req,res) => { 
     try {
@@ -97,16 +99,19 @@ const login = async (req, res) => {
       if (user_password !== user.user_password) {
         return res.status(500).json({ message: "Incorrect password" });
       }
-  
-      // You could generate and return a token here if using JWT
+      
+      const token = jwt.sign({ user }, process.env.JWT_SECRET, { expiresIn: "1h" });
+
+      res.json({ token });
   
       res.status(200).json({
         status: "OK",
-        user,  // send user data if needed
+        user,
+        token  
       });
   
     } catch (error) {
-      return res.status(500).json({ message: error.message });
+    //   return res.status(500).json({ message: error.message });
     }
 };
 
