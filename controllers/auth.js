@@ -102,7 +102,7 @@ const login = async (req, res) => {
       }
 
       const token = jwt.sign({ userId: user.userId }, process.env.JWT_SECRET, {
-        expiresIn: '5m',
+        expiresIn: '15m',
         }); 
 
         await user.update({ token });   

@@ -5,21 +5,36 @@ require('dotenv').config();
 
 exports.createTask = async (req, res) => {
     try {
-        const token = req.headers["authorization"];
-        console.log("token",token);
-        
-        if (!token) {
-            return res.status(401).json({ message: "Token gerekli" });
-          }
-          
-        const task = await Task.create(req.body);
-        console.log("Gelen token doğrulandı:", req.user);
-        res.status(201).json({ message: "Task created successfully", task });
+        // `authenticateToken` middleware'i sayesinde `req.user` kullanılabilir
+        const task = await Task.create({
+            ...req.body,
+            createdBy: req.user.username, // Token'dan gelen username bilgisi
+        });
+
+        res.status(201).json({ message: "Task başarıyla oluşturuldu.", task });
     } catch (err) {
-        console.error("Error creating task:", err);
-        res.status(500).json({ message: "Error creating task", error: err.message });
+        console.error("Task oluşturulurken hata oluştu:", err);
+        res.status(500).json({ message: "Task oluşturulamadı.", error: err.message });
     }
 };
+
+
+// exports.createTask = async (req, res) => {
+//     try {
+//         const token = req.headers["authorization"];
+            
+//         if (!token) {
+//             return res.status(401).json({ message: "Token gerekli" });
+//           }
+          
+//         const task = await Task.create(req.body);
+//         console.log("Gelen token doğrulandı:", req.user);
+//         res.status(201).json({ message: "Task created successfully", task });
+//     } catch (err) {
+//         console.error("Error creating task:", err);
+//         res.status(500).json({ message: "Error creating task", error: err.message });
+//     }
+// };
 
 exports.getTasks = async (req, res) => {
     try {
