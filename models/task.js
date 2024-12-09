@@ -27,14 +27,16 @@ const Task = sequelize.define('Task',
       allowNull:false,
     },
     endDate:{
-      type : DataTypes.DATE,
+      type : DataTypes.DATEONLY,
       allowNull:true,
     },
     reminderDate:{
-      type : DataTypes.DATE,
+      type : DataTypes.DATEONLY,
       allowNull:true,
     }
-  },
+  },{
+    timestamps: false, // createdAt ve updatedAt sütunları oluşturulmaz
+  }
 );
 
 module.exports = Task;
