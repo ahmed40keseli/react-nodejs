@@ -2,6 +2,7 @@ const Task = require('../models/task.js');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
+// bazı kütüphaneleri dahil ediyor Task sql düzeni için jwt token işlemleri için
 
 exports.createTask = async (req, res) => {
     try {
@@ -18,6 +19,7 @@ exports.createTask = async (req, res) => {
     }
 };
 
+// token kontrol eder ve eğer var ise yeni bir görev oluşturur
 
 // exports.createTask = async (req, res) => {
 //     try {
@@ -45,6 +47,8 @@ exports.getTasks = async (req, res) => {
     }
 };
 
+// tüm oluşturulmuş görevleri getirir
+
 exports.detailTask = async (req, res) => {
     try {
         const task = await Task.findByPk(req.params.id);
@@ -57,6 +61,8 @@ exports.detailTask = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+// görev detaylarını getirir
 
 exports.updateTask = async (req, res) => {
     try {
@@ -72,6 +78,8 @@ exports.updateTask = async (req, res) => {
     }
 };
 
+// görevi düzeltir update eder
+
 exports.deleteTask = async (req, res) => {
     try {
         const task = await Task.findByPk(req.params.id);
@@ -85,3 +93,5 @@ exports.deleteTask = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+// görevi silmek için kullanılır

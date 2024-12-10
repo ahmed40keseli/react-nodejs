@@ -2,6 +2,7 @@ const Auth = require('../models/auth.js');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
+// bazı kütüphaneleri dahil ediyor auth sql düzeni için jwt token işlemleri için
 
 const Cregister = async(req,res) => { 
     try {
@@ -36,6 +37,8 @@ const Cregister = async(req,res) => {
     }
 };
 
+// şirket kayıtları için işlem yapar req ile giriş yapılan değerleri kontrol eder bazı değerlerin uzunlukları kont. edilir
+
 const getAuth = async (req, res) => {
     try {
         const auths = await Auth.findAll();
@@ -46,18 +49,18 @@ const getAuth = async (req, res) => {
             allReferansNoKey.forEach(key => {
               if (item[key] !== undefined) {
                 newItem[key] = item[key];
-                // console.log("newItemasdasdadada   ",newItem);
               }
             });
             return newItem;
             
           });
-        //   console.log("newArraysdadadasdad",newArray);
         res.status(200).json({ newArray });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
+
+// tüm kullanıcıların isimlerini ve referans numaralarını getirir  
 
 const register = async(req,res) => {
     try {
@@ -86,6 +89,8 @@ const register = async(req,res) => {
         return res.status(500).json({message: error.message}) 
     }
 };
+
+// normal kullanıcıları kayıt işlemi için kullanılır ve bazı değerlerin uzunlukları kont. edilir
 
 const login = async (req, res) => {
     try {
@@ -120,6 +125,8 @@ const login = async (req, res) => {
     }
 };
 
+// email ve password ile giriş işlemlerini yapar ve aynı zamanda token oluşturur
+
 const deleteAccount =async(req,res) => {
     try {
     const {email,user_password} = req.body ;
@@ -142,6 +149,8 @@ const deleteAccount =async(req,res) => {
         return { status: 'error', message: 'An error occurred while processing your request.' };
     }
 };
+
+// kullanıcıyı email ve password bilgilerini alarak veritabanından siler
 
 const passwordReviz = async (req, res) => {
     try {
@@ -173,4 +182,8 @@ const passwordReviz = async (req, res) => {
     }
 };
 
+// name, email alır ve password değiştirilir
+
 module.exports = {register,login,deleteAccount,passwordReviz,Cregister,getAuth}
+
+// controller işlemlerini paylaşıma açıyor

@@ -4,13 +4,13 @@ require('dotenv').config();
 const authenticateToken = (req, res, next) => {
     const token = req.headers['authorization'];
 
-    if (!token) {
-        return res.status(401).json({ message: 'Token gerekli!' });
+    if (!token) { // tokenın olup olmadığını kontrol eder
+        return res.status(401).json({ message: 'Token gerekli!' }); // olmadığı zaman döneceği hata mesajı
     }
 
-    jwt.verify(token, process.env.JWT_SECRET || 'supersecretkey', (err, decoded) => {
+    jwt.verify(token, process.env.JWT_SECRET || 'supersecretkey', (err, decoded) => { //token kullanır
         if (err) {
-            return res.status(403).json({ message: 'Geçersiz token!' });
+            return res.status(403).json({ message: 'Geçersiz token!' }); // hata mesajı
         }
 
         req.user = decoded; // Token'dan gelen kullanıcı bilgilerini ekliyoruz
@@ -20,6 +20,7 @@ const authenticateToken = (req, res, next) => {
 
 module.exports = authenticateToken;
 
+// dışarı ile paylaşır
 
 
 // const jwt = require('jsonwebtoken');
