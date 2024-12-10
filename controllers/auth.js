@@ -108,7 +108,7 @@ const register = async(req,res) => {
 
 const login = async (req, res) => {
     try {
-      const { email, user_password } = req.body;
+      const { email, user_password} = req.body;
       const user = await Auth.findOne({ where: { email } });
   
       if (!user) {
@@ -131,6 +131,7 @@ const login = async (req, res) => {
         user: {
             username: user.username,
             email: user.email,
+            referansNo: user.referansNo
         },
       });
   
