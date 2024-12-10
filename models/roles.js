@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db.js');
+const sequelize = require('../config/database.js');
 
 const Role = sequelize.define('Role',
   {
@@ -13,7 +13,9 @@ const Role = sequelize.define('Role',
       type: DataTypes.STRING,
       allowNull: false,
     }
-  },
+  },{
+    timestamps: false, // createdAt ve updatedAt sütunları oluşturulmaz
+  }
 );
 
 module.exports = Role;

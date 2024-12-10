@@ -24,7 +24,7 @@ const Cregister = async(req,res) => {
             return res.status(500).json({message:"parolaniz 6 haneden fazla olmali"})
         }
         
-        const newUser = await Auth.create({username,email,user_password,referansNo})//yeni kayıt işlemini gerçekleştirir
+        const newUser = await Auth.create({username,email,user_password,referansNo,roleId: 1})//yeni kayıt işlemini gerçekleştirir
 
         const token = jwt.sign({ email: newUser.email }, process.env.JWT_SECRET, {
             expiresIn: '30m',
@@ -84,7 +84,7 @@ const register = async(req,res) => {
             return res.status(500).json({message:"parolaniz 6 haneden fazla olmali"})
         }
         
-        const newUser = await Auth.create({username,email,user_password,referansNo})
+        const newUser = await Auth.create({username,email,user_password,referansNo,roleId: 3})
 
         const token = jwt.sign({ email: newUser.email }, process.env.JWT_SECRET, {
             expiresIn: '30m',
@@ -96,7 +96,7 @@ const register = async(req,res) => {
             status: "OK",
             token,
             newUser,
-            referansNo
+            referansNo,
         })
 
     }catch (error) {

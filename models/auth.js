@@ -31,10 +31,11 @@ const User = sequelize.define('User',
       allowNull: true,
     },roleId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
+      // defaultValue: 3,
       references: {
-        model: Role,  // Role table
-        key: 'roleId', // Reference the 'roleId' in Role table
+        model: Role,
+        key: 'roleId',
       }
     }
   },{
