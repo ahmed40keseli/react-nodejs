@@ -26,8 +26,15 @@ const Cregister = async(req,res) => {
         
         const newUser = await Auth.create({username,email,user_password,referansNo})//yeni kayıt işlemini gerçekleştirir
 
+        const token = jwt.sign({ email: newUser.email }, process.env.JWT_SECRET, {
+            expiresIn: '30m',
+            }); 
+    
+            await newUser.update({ token }); 
+
         res.status(201).json({ // true dönen değerlerin içeriği 
             status: "OK",
+            token,
             newUser,
             referansNo
         })
@@ -79,8 +86,15 @@ const register = async(req,res) => {
         
         const newUser = await Auth.create({username,email,user_password,referansNo})
 
+        const token = jwt.sign({ email: newUser.email }, process.env.JWT_SECRET, {
+            expiresIn: '30m',
+        }); 
+    
+            await newUser.update({ token }); 
+
         res.status(201).json({
             status: "OK",
+            token,
             newUser,
             referansNo
         })
