@@ -46,6 +46,20 @@ exports.getTasks = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+// exports.getTasks = async(req,res)=>{
+//     try {
+//         const {referansNo,roleId} = req.body
+//         const referansNoo = await Auth.findOne({ where: { referansNo } });
+
+//         if(referansNoo){
+//             return
+//         }
+
+//     } catch (error) {
+//         res.status(500).json({ message: error.message });
+
+//     }
+// }
 
 // tüm oluşturulmuş görevleri getirir
 
