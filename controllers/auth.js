@@ -131,7 +131,8 @@ const login = async (req, res) => {
         user: {
             username: user.username,
             email: user.email,
-            referansNo: user.referansNo
+            referansNo: user.referansNo,
+            roleId: user.roleId
         },
       });
   
@@ -198,6 +199,30 @@ const passwordReviz = async (req, res) => {
 };
 
 // name, email alır ve password değiştirilir
+
+// const companyPosition = async (req, res) => {
+//     try {
+//         const { referansNo, roleId} = req.body;
+//         if (roleId == 1){""
+//             const user = await Auth.findOne({ where: { referansNo } });
+//             let allReferansNoKey = ['username','referansNo','roleId']
+
+//                 const newPositionArray = user.map(item => {
+//                 let newItem = {};
+//                 allReferansNoKey.forEach(key => {
+//                 if (item[key] !== undefined) {
+//                     newItem[key] = item[key];
+//                 }
+//                 });
+//                 return newItem;
+//                 });
+//         }
+//         res.status(200).json({ newArray });
+//     } catch (error) {
+//         console.error('Error updating user:', error);
+//         return res.status(500).json({ status: 'error', message: 'An error occurred while processing your request.' });
+//     }
+// };
 
 module.exports = {register,login,deleteAccount,passwordReviz,Cregister,getAuth}
 
