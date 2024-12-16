@@ -21,45 +21,15 @@ exports.createTask = async (req, res) => {
 
 // token kontrol eder ve eğer var ise yeni bir görev oluşturur
 
-// exports.createTask = async (req, res) => {
-//     try {
-//         const token = req.headers["authorization"];
-            
-//         if (!token) {
-//             return res.status(401).json({ message: "Token gerekli" });
-//           }
-          
-//         const task = await Task.create(req.body);
-//         console.log("Gelen token doğrulandı:", req.user);
-//         res.status(201).json({ message: "Task created successfully", task });
-//     } catch (err) {
-//         console.error("Error creating task:", err);
-//         res.status(500).json({ message: "Error creating task", error: err.message });
-//     }
-// };
-
 exports.getTasks = async (req, res) => {
     try {
-        const tasks = await Task.findAll();
-        res.status(200).json({ tasks });
+        // const tasks = await Task.findAll();
+        const idTasks = await Task.findByPk(req.params.id);
+        res.status(200).json({ idTasks });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
-// exports.getTasks = async(req,res)=>{
-//     try {
-//         const {referansNo,roleId} = req.body
-//         const referansNoo = await Auth.findOne({ where: { referansNo } });
-
-//         if(referansNoo){
-//             return
-//         }
-
-//     } catch (error) {
-//         res.status(500).json({ message: error.message });
-
-//     }
-// }
 
 // tüm oluşturulmuş görevleri getirir
 
