@@ -129,6 +129,7 @@ const login = async (req, res) => {
         status: "OK",
         token,
         user: {
+            userId :user.userId,
             username: user.username,
             email: user.email,
             referansNo: user.referansNo,
