@@ -33,8 +33,6 @@ exports.getTasks = async (req, res) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const username = decoded.username;
 
-        console.log("Username:", username);
-
         const tasks = await Task.findAll({ where: { assignProfile: username } });
 
         if (!tasks || tasks.length === 0) {
@@ -52,27 +50,7 @@ exports.getTasks = async (req, res) => {
     }
 };
 
-// exports.getTasks = async (req, res) => {
-//     try {
-//       const { userId,assignProfile } = req.body;
-//     //   kullanıcının girmiş olduğu değerler
-//       const idUser = await Auth.findAll();
-//     //   tüm kullanıcıları getirir
-//         let newTasksArray = {idUser}
-//     if(!userId) {
-//         return res.status(500).json({ message: "UserId not found" });
-//     }
-//     if (assignProfile === idUser.assignProfile) {
-//         if ()
-//         return 
-//     }
-
-//     } catch (error) {
-//         res.status(500).json({ message: error.message });
-//     }
-// };
-
-// tüm oluşturulmuş görevleri getirir
+// kişiye özel görevlerini getirir
 
 exports.detailTask = async (req, res) => {
     try {
