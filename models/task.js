@@ -40,3 +40,5 @@ const Task = sequelize.define('Task',
 );
 
 module.exports = Task;
+
+// tüm veritabanı şeması burada oluşturulur buradan değiştirilebilir

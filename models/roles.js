@@ -19,3 +19,6 @@ const Role = sequelize.define('Role',
 );
 
 module.exports = Role;
+// farklı bir tabloda kullanlması için paylaşılır
+
+// tüm veritabanı şeması burada oluşturulur buradan değiştirilebilir

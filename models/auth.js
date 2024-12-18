@@ -32,7 +32,6 @@ const User = sequelize.define('User',
     },roleId: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      // defaultValue: 3,
       references: {
         model: Role,
         key: 'roleId',
@@ -43,9 +42,12 @@ const User = sequelize.define('User',
   }
 );
 
-User.belongsTo(Role, {
+User.belongsTo(Role, { 
   foreignKey: 'roleId',
   onDelete: 'CASCADE',
 });
+// farklı bir tablodan verileri bu tabloya çeker sütun oluşturulur
 
 module.exports = User;
+
+// tüm veritabanı şeması burada oluşturulur buradan değiştirilebilir

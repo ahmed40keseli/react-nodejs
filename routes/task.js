@@ -5,9 +5,11 @@ const authenticateToken = require('../middleware/auth.js');
 
 // bazı kütüphaneleri dahil ediyor userController işlem yapan fonk dahil eder ve router ile yönlendirme yapılır
     
-// router.get('/getTasks', authenticateToken, taskController.getTasks);
 router.post('/createTask', authenticateToken, taskController.createTask);
+
+// router.get('/getTasks', authenticateToken, taskController.getTasks);
 router.post('/getTasks', taskController.getTasks);
+
 router.post('/createTask', taskController.createTask);
 router.get('/detailTask/:id', taskController.detailTask);
 router.put('/updateTask/:id', taskController.updateTask);

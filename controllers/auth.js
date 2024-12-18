@@ -6,41 +6,53 @@ require('dotenv').config();
 
 const Cregister = async(req,res) => { 
     try {
-        const {username,email,user_password,referansNo} = req.body // dışarıdan req beklediğimiz değerler
-        const user = await Auth.findOne({ where: { email } });
-        const referansnumber = await Auth.findOne({ where: { referansNo } });
+        const {username,email,user_password,referansNo} = req.body 
+        // dışarıdan req beklediğimiz değerler
+        const user = await Auth.findOne({ where: { email } }); 
+        // gelen email verisini karşılaştırır 
+        const referansnumber = await Auth.findOne({ where: { referansNo } }); 
+        //gelen referansno karşılaştırılır
 
 
         if(user){
             return res.status(500).json({message: 'bu hesap zaten var'})
+            // user(email) eğer veritabanında var ise bu hesap zaten var diye döner
         }
         if (referansnumber){
             return res.status(500).json({message: 'bu referans numarasi zaten var'})
+            // eğer referansno veri tabanında var ise ozaman bu referans numarasi zaten var döner
         }
         if (referansNo.length < 6 ) {
             return res.status(500).json({message:"referans numarasi 6 haneden fazla olmali"})
+            // referansno 6 karakterden az olamaz
         }
         if ( user_password.length < 6) {
             return res.status(500).json({message:"parolaniz 6 haneden fazla olmali"})
+            // parola oluşturulurken 6 karakterden az olamaz
         }
         
-        const newUser = await Auth.create({username,email,user_password,referansNo,roleId: 1})//yeni kayıt işlemini gerçekleştirir
+        const newUser = await Auth.create({username,email,user_password,referansNo,roleId: 1})
+        //yeni kayıt işlemini gerçekleştirir otomatik şirket kayıt ekranı olduğu için roleıd "1" olur
 
         const token = jwt.sign({ email: newUser.email }, process.env.JWT_SECRET, {
             expiresIn: '30m',
             }); 
-    
-            await newUser.update({ token }); 
+            // 30dk geçerli olacak şekilde token oluşturulur token içinde sadece email tutulur
 
-        res.status(201).json({ // true dönen değerlerin içeriği 
+            await newUser.update({ token }); 
+            // her giriş işlemi yapıldığında token işlemi yenilenir
+
+        res.status(201).json({
             status: "OK",
             token,
             newUser,
             referansNo
         })
+        // başarılı bir şekilde işlem gerçekleştirildiğinde response döner 
 
     }catch (error) {
-        return res.status(500).json({message: error.message})//hata mesajı içeriği vs.    
+        return res.status(500).json({message: error.message})
+        //hata mesajı içeriği vs.    
     }
 };
 
@@ -49,21 +61,31 @@ const Cregister = async(req,res) => {
 const getAuth = async (req, res) => {
     try {
         const auths = await Auth.findAll();
+        // tüm kişiler user tablosundan getirilir
         let allReferansNoKey = ['username','referansNo']
+        // başlıkları oluşturulmuş array oluşturulur
 
         const newArray = auths.map(item => {
+            // yeni değişken tanımlanır ve içinde döngü oluşturulur
             let newItem = {};
+            // newitem adında değişken boş bir şekilde oluşturulur
             allReferansNoKey.forEach(key => {
               if (item[key] !== undefined) {
+                // eğer veri boş dönmüyor ise
                 newItem[key] = item[key];
+                // teker teker başlıklar altına veriler oluşturulur
               }
             });
             return newItem;
+            // ilk başta boş olan değişken teker teker doldurulmuş olarak geri döndürülür
             
           });
         res.status(200).json({ newArray });
+        // işlem başarılı gerçekleştirildiğinde response döner
     } catch (error) {
         res.status(500).json({ message: error.message });
+        //hata mesajı içeriği vs.    
+
     }
 };
 
@@ -72,25 +94,36 @@ const getAuth = async (req, res) => {
 const register = async(req,res) => {
     try {
         const {username,email,user_password,referansNo} = req.body
+        // kullanıcı tarafından girilen veriler çekilir
         const user = await Auth.findOne({ where: { email } });
+        // veritabanından email karşılaştırıldıktan sonra
 
         if(user){
             return res.status(500).json({message: 'bu hesap zaten var'})
+            // user(email) eğer veritabanında var ise bu hesap zaten var diye döner
         }
         if (referansNo.length < 6 ) {
             return res.status(500).json({message:"referans numarasi 6 haneden fazla olmali"})
+            // eğer referansno veri tabanında var ise ozaman bu referans numarasi zaten var döner
         }
         if ( user_password.length < 6) {
             return res.status(500).json({message:"parolaniz 6 haneden fazla olmali"})
+            // parola oluşturulurken 6 karakterden az olamaz
         }
         
         const newUser = await Auth.create({username,email,user_password,referansNo,roleId: 3})
+        //yeni kayıt işlemini gerçekleştirir otomatik şirket kayıt ekranı olduğu için roleıd "3" olur
+
 
         const token = jwt.sign({ email: newUser.email }, process.env.JWT_SECRET, {
             expiresIn: '30m',
         }); 
+        // 30dk geçerli olacak şekilde token oluşturulur token içinde sadece email tutulur
+
     
             await newUser.update({ token }); 
+            // her giriş işlemi yapıldığında token işlemi yenilenir
+
 
         res.status(201).json({
             status: "OK",
@@ -98,9 +131,11 @@ const register = async(req,res) => {
             newUser,
             referansNo,
         })
+        // başarılı bir şekilde işlem gerçekleştirildiğinde response döner 
 
     }catch (error) {
         return res.status(500).json({message: error.message}) 
+        //hata mesajı içeriği vs.    
     }
 };
 
@@ -109,21 +144,27 @@ const register = async(req,res) => {
 const login = async (req, res) => {
     try {
       const { email, user_password} = req.body;
+        // kullanıcı tarafından girilen veriler çekilir
       const user = await Auth.findOne({ where: { email } });
+        // veritabanından email karşılaştırıldıktan sonra
   
       if (!user) {
         return res.status(500).json({ message: "User not found" });
+            // user(email) eğer veritabanında yok ise "User not found" mesaj döner
       }
   
       if (user_password !== user.user_password) {
         return res.status(500).json({ message: "Incorrect password" });
+        // user_password karşılaştırılır eğer veritabanında yok ise "Incorrect password"
       }
 
       const token = jwt.sign({ userId: user.userId, username:user.username}, process.env.JWT_SECRET, {
         expiresIn: '30m',
         }); 
+        // 30dk geçerli olacak şekilde token oluşturulur token içinde sadece email tutulur
 
         await user.update({ token });   
+            // her giriş işlemi yapıldığında token işlemi yenilenir
   
       res.status(200).json({
         status: "OK",
@@ -136,9 +177,11 @@ const login = async (req, res) => {
             roleId: user.roleId
         },
       });
+        // başarılı bir şekilde işlem gerçekleştirildiğinde response döner 
   
     } catch (error) {
       return res.status(500).json({ message: error.message });
+        //hata mesajı içeriği vs.    
     }
 };
 
@@ -147,9 +190,13 @@ const login = async (req, res) => {
 const deleteAccount =async(req,res) => {
     try {
     const {email,user_password} = req.body ;
+        // kullanıcı tarafından girilen veriler çekilir
     const user = await Auth.findOne({ where: { email } });
+        // veritabanından email karşılaştırıldıktan sonra
+
     if (!user) {
         return { status: 'error', message: 'User not found.' };
+            // user(email) eğer veritabanında yok ise "User not found" mesaj döner
     }
     if (user.user_password === user_password) {
         await user.destroy();
@@ -164,6 +211,7 @@ const deleteAccount =async(req,res) => {
     } catch (error) {
         console.error('Error deleting user:', error);
         return { status: 'error', message: 'An error occurred while processing your request.' };
+        //hata mesajı içeriği vs.    
     }
 };
 
@@ -172,15 +220,19 @@ const deleteAccount =async(req,res) => {
 const passwordReviz = async (req, res) => {
     try {
         const { username, email, user_password } = req.body;
-
+        // kullanıcı tarafından girilen veriler çekilir
         const user = await Auth.findOne({ where: { email } });
+        // veritabanından email karşılaştırıldıktan sonra
 
         if (!user) {
             return res.status(404).json({ status: 'error', message: 'User not found.' });
+            // user(email) eğer veritabanında yok ise "User not found" mesaj döner
         }
 
         if (user.username === username) {
+            // isimler aynı ise 
             await user.update({ user_password });
+            // şifre yenilenir
             return res.status(200).json({
                 status: "OK",
                 message: "Password updated successfully.",
@@ -190,12 +242,14 @@ const passwordReviz = async (req, res) => {
                     password: user.user_password
                 }
             });
+        // başarılı bir şekilde işlem gerçekleştirildiğinde response döner 
         } else {
             return res.status(400).json({ message: "Incorrect username." });
         }
     } catch (error) {
         console.error('Error updating user:', error);
         return res.status(500).json({ status: 'error', message: 'An error occurred while processing your request.' });
+        //hata mesajı içeriği vs.    
     }
 };
 
