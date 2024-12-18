@@ -80,7 +80,7 @@ exports.detailTask = async (req, res) => {
 exports.updateTask = async (req, res) => {
     try {
         const task = await Task.findByPk(req.params.id);
-        // id alarak görevleri bulur
+        // kullanıcıdan id alınarak görevleri bulunur
         if (task) {
             await task.update(req.body);
             // gelen kullanıcı verilerini alır ve update edilir

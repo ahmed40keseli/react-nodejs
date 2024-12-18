@@ -34,9 +34,14 @@ const Cregister = async(req,res) => {
         const newUser = await Auth.create({username,email,user_password,referansNo,roleId: 1})
         //yeni kayıt işlemini gerçekleştirir otomatik şirket kayıt ekranı olduğu için roleıd "1" olur
 
-        const token = jwt.sign({ email: newUser.email }, process.env.JWT_SECRET, {
+        const token = jwt.sign({
+            userId: user.userId, 
+            username:user.username, 
+            referansNo:user.referansNo, 
+            roleId:user.roleId,
+        },process.env.JWT_SECRET, {
             expiresIn: '30m',
-            }); 
+            });  
             // 30dk geçerli olacak şekilde token oluşturulur token içinde sadece email tutulur
 
             await newUser.update({ token }); 
@@ -115,9 +120,14 @@ const register = async(req,res) => {
         //yeni kayıt işlemini gerçekleştirir otomatik şirket kayıt ekranı olduğu için roleıd "3" olur
 
 
-        const token = jwt.sign({ email: newUser.email }, process.env.JWT_SECRET, {
+        const token = jwt.sign({
+            userId: user.userId, 
+            username:user.username, 
+            referansNo:user.referansNo, 
+            roleId:user.roleId,
+        },process.env.JWT_SECRET, {
             expiresIn: '30m',
-        }); 
+            }); 
         // 30dk geçerli olacak şekilde token oluşturulur token içinde sadece email tutulur
 
     
@@ -158,7 +168,13 @@ const login = async (req, res) => {
         // user_password karşılaştırılır eğer veritabanında yok ise "Incorrect password"
       }
 
-      const token = jwt.sign({ userId: user.userId, username:user.username}, process.env.JWT_SECRET, {
+      const token = jwt.sign({
+        userId: user.userId, 
+        username:user.username, 
+        referansNo:user.referansNo, 
+        roleId:user.roleId,
+        
+        },process.env.JWT_SECRET, {
         expiresIn: '30m',
         }); 
         // 30dk geçerli olacak şekilde token oluşturulur token içinde sadece email tutulur
@@ -167,15 +183,8 @@ const login = async (req, res) => {
             // her giriş işlemi yapıldığında token işlemi yenilenir
   
       res.status(200).json({
-        status: "OK",
+        // status: "OK",
         token,
-        user: {
-            userId :user.userId,
-            username: user.username,
-            email: user.email,
-            referansNo: user.referansNo,
-            roleId: user.roleId
-        },
       });
         // başarılı bir şekilde işlem gerçekleştirildiğinde response döner 
   
@@ -256,3 +265,20 @@ const passwordReviz = async (req, res) => {
 module.exports = {register,login,deleteAccount,passwordReviz,Cregister,getAuth}
 
 // controller işlemlerini paylaşıma açıyor
+
+
+
+
+
+// *****************FUTURE******************************FUTURE*************************FUTURE*****************
+
+// exports.register = async (req,res) => {
+//     try {
+//         const signup = await Auth.create({
+//             ...req.body,
+//             const { email } = req.body;
+//         })
+//     } catch (error) {
+        
+//     }
+// }
