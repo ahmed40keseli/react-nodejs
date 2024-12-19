@@ -13,7 +13,6 @@ const Cregister = async(req,res) => {
         const referansnumber = await Auth.findOne({ where: { referansNo } }); 
         //gelen referansno karşılaştırılır
 
-
         if(user){
             return res.status(500).json({message: 'bu hesap zaten var'})
             // user(email) eğer veritabanında var ise bu hesap zaten var diye döner
@@ -33,25 +32,26 @@ const Cregister = async(req,res) => {
         
         const newUser = await Auth.create({username,email,user_password,referansNo,roleId: 1})
         //yeni kayıt işlemini gerçekleştirir otomatik şirket kayıt ekranı olduğu için roleıd "1" olur
-
+        
         const token = jwt.sign({
-            userId: user.userId, 
-            username:user.username, 
-            referansNo:user.referansNo, 
-            roleId:user.roleId,
+            userId: newUser.id, 
+            username:newUser.username, 
+            referansNo:newUser.referansNo, 
+            roleId:newUser.roleId,
         },process.env.JWT_SECRET, {
             expiresIn: '30m',
             });  
             // 30dk geçerli olacak şekilde token oluşturulur token içinde sadece email tutulur
 
-            await newUser.update({ token }); 
+            await newUser.update({ token });    
             // her giriş işlemi yapıldığında token işlemi yenilenir
 
         res.status(201).json({
-            status: "OK",
+            // status: "OK",
+            // message: 'Kayıt başarıyla tamamlandı',
             token,
-            newUser,
-            referansNo
+            // newUser,
+            // referansNo
         })
         // başarılı bir şekilde işlem gerçekleştirildiğinde response döner 
 
@@ -119,27 +119,24 @@ const register = async(req,res) => {
         const newUser = await Auth.create({username,email,user_password,referansNo,roleId: 3})
         //yeni kayıt işlemini gerçekleştirir otomatik şirket kayıt ekranı olduğu için roleıd "3" olur
 
-
         const token = jwt.sign({
-            userId: user.userId, 
-            username:user.username, 
-            referansNo:user.referansNo, 
-            roleId:user.roleId,
+            userId: newUser.id, 
+            username:newUser.username, 
+            referansNo:newUser.referansNo, 
+            roleId:newUser.roleId,
         },process.env.JWT_SECRET, {
             expiresIn: '30m',
             }); 
         // 30dk geçerli olacak şekilde token oluşturulur token içinde sadece email tutulur
 
-    
             await newUser.update({ token }); 
             // her giriş işlemi yapıldığında token işlemi yenilenir
 
-
         res.status(201).json({
-            status: "OK",
+            // status: "OK",
             token,
-            newUser,
-            referansNo,
+            // newUser,
+            // referansNo,
         })
         // başarılı bir şekilde işlem gerçekleştirildiğinde response döner 
 
