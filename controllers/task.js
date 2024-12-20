@@ -25,6 +25,8 @@ exports.getTasks = async (req, res) => {
     try {
         const token = req.headers.token; 
         // Header'dan token alınıyor
+        console.log(token);
+        
         if (!token) {
             return res.status(401).json({ message: "Unauthorized - No Token Provided" });
             // eğer token yok ise hata döner

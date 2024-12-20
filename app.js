@@ -6,11 +6,11 @@ require('dotenv').config();
 const cors = require('cors');
 
 // bazı kütüphaneleri dahil ediyor 
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(cors());
+
 
 // devreye sokar çalıştırmaya başlar
 
