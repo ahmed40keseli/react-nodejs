@@ -1,7 +1,7 @@
 const Auth = require('../models/auth.js');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 require('dotenv').config();
-
 // bazı kütüphaneleri dahil ediyor auth sql düzeni için jwt token işlemleri için
 
 const Cregister = async(req,res) => { 
@@ -60,7 +60,6 @@ const Cregister = async(req,res) => {
         //hata mesajı içeriği vs.    
     }
 };
-
 // şirket kayıtları için işlem yapar req ile giriş yapılan değerleri kontrol eder bazı değerlerin uzunlukları kont. edilir
 
 const getAuth = async (req, res) => {
@@ -93,7 +92,6 @@ const getAuth = async (req, res) => {
 
     }
 };
-
 // tüm kullanıcıların isimlerini ve referans numaralarını getirir  
 
 const register = async(req,res) => {
@@ -145,8 +143,67 @@ const register = async(req,res) => {
         //hata mesajı içeriği vs.    
     }
 };
-
 // normal kullanıcıları kayıt işlemi için kullanılır ve bazı değerlerin uzunlukları kont. edilir
+
+// const login = async (req, res) => {
+//     try {
+//         const { email, user_password } = req.body;
+
+//         if (!email || !user_password) {
+//             return res.status(400).json({ 
+//                 message: "Email and password are required" 
+//             });
+//         }
+
+//         const user = await Auth.findOne({ where: { email } });
+
+//         if (!user) {
+//             return res.status(401).json({ 
+//                 message: "Invalid credentials" 
+//             });
+//         }
+
+//         // Şifreleri plain text olarak saklamak yerine bcrypt kullanılmalı
+//         const isPasswordValid = await bcrypt.compare(user_password, user.user_password);
+//         if (!isPasswordValid) {
+//             return res.status(401).json({ 
+//                 message: "Invalid credentials" 
+//             });
+//         }
+
+//         const tokenPayload = {
+//             userId: user.userId,
+//             username: user.username,
+//             referansNo: user.referansNo,
+//             roleId: user.roleId
+//         };
+
+//         const token = jwt.sign(
+//             tokenPayload,
+//             process.env.JWT_SECRET,
+//             { expiresIn: '30m' }
+//         );
+
+//         await user.update({ token });
+
+//         return res.status(200).json({
+//             success: true,
+//             token,
+//             user: {
+//                 userId: user.userId,
+//                 username: user.username,
+//                 email: user.email,
+//                 roleId: user.roleId
+//             }
+//         });
+
+//     } catch (error) {
+//         console.error('Login error:', error);
+//         return res.status(500).json({ 
+//             message: "An error occurred during login" 
+//         });
+//     }
+// };
 
 const login = async (req, res) => {
     try {
@@ -154,43 +211,42 @@ const login = async (req, res) => {
         // kullanıcı tarafından girilen veriler çekilir
       const user = await Auth.findOne({ where: { email } });
         // veritabanından email karşılaştırıldıktan sonra
-  
+
       if (!user) {
         return res.status(500).json({ message: "User not found" });
             // user(email) eğer veritabanında yok ise "User not found" mesaj döner
       }
-  
       if (user_password !== user.user_password) {
         return res.status(500).json({ message: "Incorrect password" });
         // user_password karşılaştırılır eğer veritabanında yok ise "Incorrect password"
       }
 
-      const token = jwt.sign({
+      const authorization = jwt.sign({
         userId: user.userId, 
-        username:user.username, 
-        referansNo:user.referansNo, 
-        roleId:user.roleId,
-        
-        },process.env.JWT_SECRET, {
+        username: user.username, 
+        referansNo: user.referansNo, 
+        roleId: user.roleId,
+      }, process.env.JWT_SECRET, {
         expiresIn: '30m',
-        }); 
+      });  
         // 30dk geçerli olacak şekilde token oluşturulur token içinde sadece email tutulur
 
-        await user.update({ token });   
-            // her giriş işlemi yapıldığında token işlemi yenilenir
+        await user.update({ authorization });      
+        // her giriş işlemi yapıldığında token işlemi yenilenir
   
-      res.status(200).json({
-        // status: "OK",
-        token,
-      });
-        // başarılı bir şekilde işlem gerçekleştirildiğinde response döner 
-  
+        res.setHeader('Authorization', `Bearer ${authorization}`);
+        // Access-Control-Expose-Headers ekleyerek frontend'in header'ı görmesini sağla
+        res.setHeader('Access-Control-Expose-Headers', 'Authorization');
+        
+        res.status(200).json({
+            message: 'Login successful',
+            token: authorization // Token'ı response body'de de gönderebilirsiniz
+        });
+
     } catch (error) {
-      return res.status(500).json({ message: error.message });
-        //hata mesajı içeriği vs.    
+        return res.status(500).json({ message: error.message });
     }
 };
-
 // email ve password ile giriş işlemlerini yapar ve aynı zamanda token oluşturur
 
 const deleteAccount =async(req,res) => {
@@ -220,7 +276,6 @@ const deleteAccount =async(req,res) => {
         //hata mesajı içeriği vs.    
     }
 };
-
 // kullanıcıyı email ve password bilgilerini alarak veritabanından siler
 
 const passwordReviz = async (req, res) => {
@@ -260,7 +315,6 @@ const passwordReviz = async (req, res) => {
 };
 
 module.exports = {register,login,deleteAccount,passwordReviz,Cregister,getAuth}
-
 // controller işlemlerini paylaşıma açıyor
 
 

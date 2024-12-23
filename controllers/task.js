@@ -1,7 +1,6 @@
 const Task = require('../models/task.js');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-
 // bazı kütüphaneleri dahil ediyor Task sql düzeni için jwt token işlemleri için
 
 exports.createTask = async (req, res) => {
@@ -18,21 +17,20 @@ exports.createTask = async (req, res) => {
         res.status(500).json({ message: "Task oluşturulamadı.", error: err.message });
     }
 };
-
 // token kontrol eder ve eğer var ise yeni bir görev oluşturur
 
 exports.getTasks = async (req, res) => { 
     try {
-        const token = req.headers.token; 
+        const authorization = req.headers.authorization; 
         // Header'dan token alınıyor
-        console.log(token);
+        console.log(authorization);
         
-        if (!token) {
+        if (!authorization) {
             return res.status(401).json({ message: "Unauthorized - No Token Provided" });
             // eğer token yok ise hata döner
         }
 
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(authorization, process.env.JWT_SECRET);
         const username = decoded.username;
         // Token çözülüyor ve içinden 'username' alınıyor
 
@@ -57,7 +55,6 @@ exports.getTasks = async (req, res) => {
         // hata mesajı döner
     }
 };
-
 // kişiye özel görevlerini getirir
 
 exports.detailTask = async (req, res) => {
@@ -76,7 +73,6 @@ exports.detailTask = async (req, res) => {
         // hata mesajı döner
     }
 };
-
 // görev detaylarını getirir
 
 exports.updateTask = async (req, res) => {
@@ -97,7 +93,6 @@ exports.updateTask = async (req, res) => {
         // hata mesajı vs. 
     }
 };
-
 // görevi düzeltir update eder
 
 exports.deleteTask = async (req, res) => {
@@ -117,5 +112,4 @@ exports.deleteTask = async (req, res) => {
         // hata mesajı döner
     }
 };
-
 // görevi silmek için kullanılır
