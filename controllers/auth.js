@@ -235,7 +235,8 @@ const login = async (req, res) => {
         // her giriş işlemi yapıldığında token işlemi yenilenir
   
         res.setHeader('Authorization', `Bearer ${authorization}`);
-        // Access-Control-Expose-Headers ekleyerek frontend'in header'ı görmesini sağla
+        // res.setHeader('Authorization', authorization);
+        // Access-Control-Expose-Headers ekleyerek frontend'in header'ı görmesini sağlar
         res.setHeader('Access-Control-Expose-Headers', 'Authorization');
         
         res.status(200).json({
@@ -316,20 +317,3 @@ const passwordReviz = async (req, res) => {
 
 module.exports = {register,login,deleteAccount,passwordReviz,Cregister,getAuth}
 // controller işlemlerini paylaşıma açıyor
-
-
-
-
-
-// *****************FUTURE******************************FUTURE*************************FUTURE*****************
-
-// exports.register = async (req,res) => {
-//     try {
-//         const signup = await Auth.create({
-//             ...req.body,
-//             const { email } = req.body;
-//         })
-//     } catch (error) {
-        
-//     }
-// }
