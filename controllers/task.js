@@ -23,17 +23,16 @@ exports.getTasks = async (req, res) => {
     try {
         const authorization = req.headers.authorization; 
         // Header'dan token alınıyor
-        console.log(authorization);
         
         if (!authorization) {
             return res.status(401).json({ message: "Unauthorized - No Token Provided" });
             // eğer token yok ise hata döner
         }
+        const token = authorization.split(' ')[1];
 
-        const decoded = jwt.verify(authorization, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const username = decoded.username;
         // Token çözülüyor ve içinden 'username' alınıyor
-
 
         const tasks = await Task.findAll({ where: { assignProfile: username } });
         // assignProfile başlığı altında username eklenerek aranır
@@ -42,13 +41,11 @@ exports.getTasks = async (req, res) => {
             return res.status(404).json({ message: "No tasks found for this user" });
             // eğer görev yok ise mesaj döner
         }
-
         return res.status(200).json({
             message: "Tasks retrieved successfully",
             tasks
             // başarı ile gerçekleşir ise mesaj ve veri döner
         });
-
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "An error occurred", error: error.message });

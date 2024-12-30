@@ -1,22 +1,48 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-// Token doğrulama middleware'i
 const verifyToken = (req, res, next) => {
-    const token = req.headers['authorization'] && req.headers['authorization'].split(' ')[1]; // Token, Bearer <token> formatında olmalı
-
-    if (!token) {
-        return res.status(401).json({ message: 'Token gerekli!' }); // Token yoksa hata mesajı
-    }
-
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => { // Token doğrulama
-        if (err) {
-            return res.status(403).json({ message: 'Geçersiz token!' }); // Token geçersizse hata mesajı
+    try {
+        const authHeader = req.headers.authorization || req.headers['authorization'];
+        // Authorization header'ını kontrol et
+        
+        if (!authHeader) {
+            return res.status(401).json({ message: 'Authorization header bulunamadı!' });
         }
 
-        req.user = decoded; // Token'dan gelen kullanıcı bilgilerini req.user'a ekliyoruz
-        next(); // Sonraki middleware'e geçiş
-    });
+        if (!authHeader.startsWith('Bearer ')) {
+        // Header'ın Bearer token formatında olduğunu kontrol et
+
+            return res.status(401).json({ message: 'Geçersiz token formatı!' });
+        }
+
+        const token = authHeader.split(' ')[1];
+        // Bearer'dan sonraki token'ı al        
+        if (!token) {
+            return res.status(401).json({ message: 'Token bulunamadı!' });
+        }
+
+        jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+        // Token'ı doğrula
+            if (err) {
+                console.error('Token doğrulama hatasi:', err);
+                return res.status(403).json({ 
+                    message: 'Geçersiz token!',
+                    error: err.message 
+                });
+            }
+            
+            req.user = decoded;
+            next();
+        });
+
+    } catch (error) {
+        console.error('Middleware hatası:', error);
+        return res.status(500).json({ 
+            message: 'Token doğrulama sırasında bir hata oluştu',
+            error: error.message 
+        });
+    }
 };
 
 module.exports = verifyToken;

@@ -8,8 +8,10 @@ const Cregister = async(req,res) => {
     try {
         const {username,email,user_password,referansNo} = req.body 
         // dışarıdan req beklediğimiz değerler
+
         const user = await Auth.findOne({ where: { email } }); 
         // gelen email verisini karşılaştırır 
+
         const referansnumber = await Auth.findOne({ where: { referansNo } }); 
         //gelen referansno karşılaştırılır
 
@@ -47,11 +49,7 @@ const Cregister = async(req,res) => {
             // her giriş işlemi yapıldığında token işlemi yenilenir
 
         res.status(201).json({
-            // status: "OK",
-            // message: 'Kayıt başarıyla tamamlandı',
             token,
-            // newUser,
-            // referansNo
         })
         // başarılı bir şekilde işlem gerçekleştirildiğinde response döner 
 
@@ -66,16 +64,20 @@ const getAuth = async (req, res) => {
     try {
         const auths = await Auth.findAll();
         // tüm kişiler user tablosundan getirilir
+        
         let allReferansNoKey = ['username','referansNo']
         // başlıkları oluşturulmuş array oluşturulur
 
         const newArray = auths.map(item => {
             // yeni değişken tanımlanır ve içinde döngü oluşturulur
+
             let newItem = {};
             // newitem adında değişken boş bir şekilde oluşturulur
+
             allReferansNoKey.forEach(key => {
               if (item[key] !== undefined) {
                 // eğer veri boş dönmüyor ise
+
                 newItem[key] = item[key];
                 // teker teker başlıklar altına veriler oluşturulur
               }
@@ -86,6 +88,7 @@ const getAuth = async (req, res) => {
           });
         res.status(200).json({ newArray });
         // işlem başarılı gerçekleştirildiğinde response döner
+
     } catch (error) {
         res.status(500).json({ message: error.message });
         //hata mesajı içeriği vs.    
@@ -98,6 +101,7 @@ const register = async(req,res) => {
     try {
         const {username,email,user_password,referansNo} = req.body
         // kullanıcı tarafından girilen veriler çekilir
+
         const user = await Auth.findOne({ where: { email } });
         // veritabanından email karşılaştırıldıktan sonra
 
@@ -131,10 +135,7 @@ const register = async(req,res) => {
             // her giriş işlemi yapıldığında token işlemi yenilenir
 
         res.status(201).json({
-            // status: "OK",
             token,
-            // newUser,
-            // referansNo,
         })
         // başarılı bir şekilde işlem gerçekleştirildiğinde response döner 
 
@@ -145,70 +146,11 @@ const register = async(req,res) => {
 };
 // normal kullanıcıları kayıt işlemi için kullanılır ve bazı değerlerin uzunlukları kont. edilir
 
-// const login = async (req, res) => {
-//     try {
-//         const { email, user_password } = req.body;
-
-//         if (!email || !user_password) {
-//             return res.status(400).json({ 
-//                 message: "Email and password are required" 
-//             });
-//         }
-
-//         const user = await Auth.findOne({ where: { email } });
-
-//         if (!user) {
-//             return res.status(401).json({ 
-//                 message: "Invalid credentials" 
-//             });
-//         }
-
-//         // Şifreleri plain text olarak saklamak yerine bcrypt kullanılmalı
-//         const isPasswordValid = await bcrypt.compare(user_password, user.user_password);
-//         if (!isPasswordValid) {
-//             return res.status(401).json({ 
-//                 message: "Invalid credentials" 
-//             });
-//         }
-
-//         const tokenPayload = {
-//             userId: user.userId,
-//             username: user.username,
-//             referansNo: user.referansNo,
-//             roleId: user.roleId
-//         };
-
-//         const token = jwt.sign(
-//             tokenPayload,
-//             process.env.JWT_SECRET,
-//             { expiresIn: '30m' }
-//         );
-
-//         await user.update({ token });
-
-//         return res.status(200).json({
-//             success: true,
-//             token,
-//             user: {
-//                 userId: user.userId,
-//                 username: user.username,
-//                 email: user.email,
-//                 roleId: user.roleId
-//             }
-//         });
-
-//     } catch (error) {
-//         console.error('Login error:', error);
-//         return res.status(500).json({ 
-//             message: "An error occurred during login" 
-//         });
-//     }
-// };
-
 const login = async (req, res) => {
     try {
       const { email, user_password} = req.body;
         // kullanıcı tarafından girilen veriler çekilir
+
       const user = await Auth.findOne({ where: { email } });
         // veritabanından email karşılaştırıldıktan sonra
 
@@ -235,13 +177,12 @@ const login = async (req, res) => {
         // her giriş işlemi yapıldığında token işlemi yenilenir
   
         res.setHeader('Authorization', `Bearer ${authorization}`);
-        // res.setHeader('Authorization', authorization);
-        // Access-Control-Expose-Headers ekleyerek frontend'in header'ı görmesini sağlar
         res.setHeader('Access-Control-Expose-Headers', 'Authorization');
         
         res.status(200).json({
             message: 'Login successful',
-            token: authorization // Token'ı response body'de de gönderebilirsiniz
+            token: authorization 
+            // Token'ı response body'de de gönderebilirsiniz
         });
 
     } catch (error) {
@@ -254,6 +195,7 @@ const deleteAccount =async(req,res) => {
     try {
     const {email,user_password} = req.body ;
         // kullanıcı tarafından girilen veriler çekilir
+
     const user = await Auth.findOne({ where: { email } });
         // veritabanından email karşılaştırıldıktan sonra
 
@@ -283,6 +225,7 @@ const passwordReviz = async (req, res) => {
     try {
         const { username, email, user_password } = req.body;
         // kullanıcı tarafından girilen veriler çekilir
+
         const user = await Auth.findOne({ where: { email } });
         // veritabanından email karşılaştırıldıktan sonra
 
@@ -293,8 +236,10 @@ const passwordReviz = async (req, res) => {
 
         if (user.username === username) {
             // isimler aynı ise 
+
             await user.update({ user_password });
             // şifre yenilenir
+            
             return res.status(200).json({
                 status: "OK",
                 message: "Password updated successfully.",
