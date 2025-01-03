@@ -8,7 +8,6 @@ const cors = require('cors');
 // bazı kütüphaneleri dahil ediyor 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public'));
 app.use(cors({
     exposedHeaders: ["Authorization"], // Authorization header'ını erişilebilir hale getir
   }));
@@ -18,8 +17,10 @@ app.use(cors({
 
 app.use('/',User);
 app.use('/',Task);
-
 // routers için kullanılır uzantıları ayarlar düzenler
+
+app.use(express.static('public'));
+
 
 module.exports = app;
 
