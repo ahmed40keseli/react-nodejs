@@ -1,6 +1,6 @@
 const Auth = require('../models/auth.js');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+// const bcrypt = require('bcrypt');
 require('dotenv').config();
 // bazı kütüphaneleri dahil ediyor auth sql düzeni için jwt token işlemleri için
 
@@ -133,13 +133,15 @@ const register = async(req,res) => {
 
             await newUser.update({ token }); 
             // her giriş işlemi yapıldığında token işlemi yenilenir
-
+        
         res.status(201).json({
             token,
         })
         // başarılı bir şekilde işlem gerçekleştirildiğinde response döner 
-
+        console.log("register resssssssssssssss",res)
     }catch (error) {
+        console.log("register ressss error ",error.message)
+
         return res.status(500).json({message: error.message}) 
         //hata mesajı içeriği vs.    
     }
