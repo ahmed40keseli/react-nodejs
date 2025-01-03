@@ -1,8 +1,14 @@
 const Auth = require('../models/auth.js');
+// database yapısını kod halinde kolay yönetebilmek için içe aktarılır
 const jwt = require('jsonwebtoken');
+// password veya tokenleri şifrelemek için kullanılır
+
 // const bcrypt = require('bcrypt');
+// Node.js projelerinde genellikle şifreleme (hashing) işlemleri için kullanılır.
+
 require('dotenv').config();
-// bazı kütüphaneleri dahil ediyor auth sql düzeni için jwt token işlemleri için
+// env dosyasındaki bilgileri çeker
+
 
 const Cregister = async(req,res) => { 
     try {
@@ -43,10 +49,10 @@ const Cregister = async(req,res) => {
         },process.env.JWT_SECRET, {
             expiresIn: '30m',
             });  
-            // 30dk geçerli olacak şekilde token oluşturulur token içinde sadece email tutulur
+            // 30dk geçerli olacak şekilde token oluşturulur istenilen veriler token içinde tutulur
 
             await newUser.update({ token });    
-            // her giriş işlemi yapıldığında token işlemi yenilenir
+            // her giriş işlemi yapıldığında token şifresi yenilenir
 
         res.status(201).json({
             token,
@@ -129,7 +135,8 @@ const register = async(req,res) => {
         },process.env.JWT_SECRET, {
             expiresIn: '30m',
             }); 
-        // 30dk geçerli olacak şekilde token oluşturulur token içinde sadece email tutulur
+        // 30dk geçerli olacak şekilde token oluşturulur istenilen veriler token içinde tutulur
+
 
             await newUser.update({ token }); 
             // her giriş işlemi yapıldığında token işlemi yenilenir
@@ -138,10 +145,7 @@ const register = async(req,res) => {
             token,
         })
         // başarılı bir şekilde işlem gerçekleştirildiğinde response döner 
-        console.log("register resssssssssssssss",res)
     }catch (error) {
-        console.log("register ressss error ",error.message)
-
         return res.status(500).json({message: error.message}) 
         //hata mesajı içeriği vs.    
     }
@@ -173,7 +177,9 @@ const login = async (req, res) => {
       }, process.env.JWT_SECRET, {
         expiresIn: '30m',
       });  
-        // 30dk geçerli olacak şekilde token oluşturulur token içinde sadece email tutulur
+        // 30dk geçerli olacak şekilde token oluşturulur istenilen veriler token içinde tutulur
+
+
 
         await user.update({ authorization });      
         // her giriş işlemi yapıldığında token işlemi yenilenir
@@ -199,7 +205,7 @@ const deleteAccount =async(req,res) => {
         // kullanıcı tarafından girilen veriler çekilir
 
     const user = await Auth.findOne({ where: { email } });
-        // veritabanından email karşılaştırıldıktan sonra
+        // veritabanından email karşılaştırıldıktan sonra devam eder. findone Giriş yaparken e-posta veya kullanıcı adına göre kullanıcı arama.
 
     if (!user) {
         return { status: 'error', message: 'User not found.' };
