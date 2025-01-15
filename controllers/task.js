@@ -5,12 +5,14 @@ require('dotenv').config();
 
 exports.createTask = async (req, res) => {
     try {
+        console.log("Fonksiyon: createTask çalışıyor...");
         // `authenticateToken` middleware'i sayesinde `req.user` kullanılabilir
         const task = await Task.create({
             ...req.body,
             createdBy: req.user.username, // Token'dan gelen username bilgisi
         });
 
+        console.log("görev başarıyla kaydedildi.");
         res.status(201).json({ message: "Task başarıyla oluşturuldu.", task });
     } catch (err) {
         console.error("Task oluşturulurken hata oluştu:", err);
@@ -21,6 +23,7 @@ exports.createTask = async (req, res) => {
 
 exports.getTasks = async (req, res) => { 
     try {
+        console.log("Fonksiyon: getTasks çalışıyor...");
         const authorization = req.headers.authorization; 
         // Header'dan token alınıyor
         
@@ -41,13 +44,14 @@ exports.getTasks = async (req, res) => {
             return res.status(404).json({ message: "No tasks found for this user" });
             // eğer görev yok ise mesaj döner
         }
+        console.log("görev başarıyla getirildi.");
         return res.status(200).json({
             message: "Tasks retrieved successfully",
             tasks
             // başarı ile gerçekleşir ise mesaj ve veri döner
         });
     } catch (error) {
-        console.error(error);
+        console.error("görevler getirilirken hata oluşturuldu",error);
         return res.status(500).json({ message: "An error occurred", error: error.message });
         // hata mesajı döner
     }

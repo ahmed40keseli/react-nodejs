@@ -2,16 +2,15 @@ const Auth = require('../models/auth.js');
 // database yapısını kod halinde kolay yönetebilmek için içe aktarılır
 const jwt = require('jsonwebtoken');
 // password veya tokenleri şifrelemek için kullanılır
-
 // const bcrypt = require('bcrypt');
 // Node.js projelerinde genellikle şifreleme (hashing) işlemleri için kullanılır.
-
 require('dotenv').config();
 // env dosyasındaki bilgileri çeker
 
 
 const Cregister = async(req,res) => { 
     try {
+        console.log("Fonksiyon: Cregister çalışıyor...");
         const {username,email,user_password,referansNo} = req.body 
         // dışarıdan req beklediğimiz değerler
 
@@ -53,13 +52,14 @@ const Cregister = async(req,res) => {
 
             await newUser.update({ token });    
             // her giriş işlemi yapıldığında token şifresi yenilenir
-
+        console.log("Kullanıcı başarıyla kaydedildi.");
         res.status(201).json({
             token,
         })
         // başarılı bir şekilde işlem gerçekleştirildiğinde response döner 
 
     }catch (error) {
+        console.error("Hata: Cregister", error.message);
         return res.status(500).json({message: error.message})
         //hata mesajı içeriği vs.    
     }
@@ -68,43 +68,39 @@ const Cregister = async(req,res) => {
 
 const getAuth = async (req, res) => {
     try {
+        console.log("Fonksiyon: getAuth çalışıyor...");
         const auths = await Auth.findAll();
         // tüm kişiler user tablosundan getirilir
-        
         let allReferansNoKey = ['username','referansNo']
         // başlıkları oluşturulmuş array oluşturulur
-
         const newArray = auths.map(item => {
             // yeni değişken tanımlanır ve içinde döngü oluşturulur
-
             let newItem = {};
             // newitem adında değişken boş bir şekilde oluşturulur
-
             allReferansNoKey.forEach(key => {
               if (item[key] !== undefined) {
                 // eğer veri boş dönmüyor ise
-
                 newItem[key] = item[key];
                 // teker teker başlıklar altına veriler oluşturulur
               }
             });
             return newItem;
             // ilk başta boş olan değişken teker teker doldurulmuş olarak geri döndürülür
-            
           });
+        console.log("Veriler başarıyla getirildi.");
         res.status(200).json({ newArray });
         // işlem başarılı gerçekleştirildiğinde response döner
-
     } catch (error) {
+        console.error("Hata: getAuth", error.message);
         res.status(500).json({ message: error.message });
         //hata mesajı içeriği vs.    
-
     }
 };
 // tüm kullanıcıların isimlerini ve referans numaralarını getirir  
 
 const register = async(req,res) => {
     try {
+        console.log("Fonksiyon: register çalışıyor...");
         const {username,email,user_password,referansNo} = req.body
         // kullanıcı tarafından girilen veriler çekilir
 
@@ -141,11 +137,13 @@ const register = async(req,res) => {
             await newUser.update({ token }); 
             // her giriş işlemi yapıldığında token işlemi yenilenir
         
+        console.log("Veriler başarıyla kaydedildi.");
         res.status(201).json({
             token,
         })
         // başarılı bir şekilde işlem gerçekleştirildiğinde response döner 
     }catch (error) {
+        console.error("Hata: register", error.message);
         return res.status(500).json({message: error.message}) 
         //hata mesajı içeriği vs.    
     }
@@ -154,32 +152,31 @@ const register = async(req,res) => {
 
 const login = async (req, res) => {
     try {
-      const { email, user_password} = req.body;
+        console.log("Fonksiyon: login çalışıyor...");
+        const { email, user_password} = req.body;
         // kullanıcı tarafından girilen veriler çekilir
 
-      const user = await Auth.findOne({ where: { email } });
+        const user = await Auth.findOne({ where: { email } });
         // veritabanından email karşılaştırıldıktan sonra
 
-      if (!user) {
-        return res.status(500).json({ message: "User not found" });
+        if (!user) {
+            return res.status(500).json({ message: "User not found" });
             // user(email) eğer veritabanında yok ise "User not found" mesaj döner
-      }
-      if (user_password !== user.user_password) {
-        return res.status(500).json({ message: "Incorrect password" });
-        // user_password karşılaştırılır eğer veritabanında yok ise "Incorrect password"
-      }
+        }
+        if (user_password !== user.user_password) {
+            return res.status(500).json({ message: "Incorrect password" });
+            // user_password karşılaştırılır eğer veritabanında yok ise "Incorrect password"
+        }
 
-      const authorization = jwt.sign({
-        userId: user.userId, 
-        username: user.username, 
-        referansNo: user.referansNo, 
-        roleId: user.roleId,
-      }, process.env.JWT_SECRET, {
-        expiresIn: '30m',
-      });  
+        const authorization = jwt.sign({
+            userId: user.userId, 
+            username: user.username, 
+            referansNo: user.referansNo, 
+            roleId: user.roleId,
+        }, process.env.JWT_SECRET, {
+            expiresIn: '30m',
+        });  
         // 30dk geçerli olacak şekilde token oluşturulur istenilen veriler token içinde tutulur
-
-
 
         await user.update({ authorization });      
         // her giriş işlemi yapıldığında token işlemi yenilenir
@@ -187,6 +184,7 @@ const login = async (req, res) => {
         res.setHeader('Authorization', `Bearer ${authorization}`);
         res.setHeader('Access-Control-Expose-Headers', 'Authorization');
         
+        console.log("Veriler başarıyla kontrol edildi.");
         res.status(200).json({
             message: 'Login successful',
             token: authorization 
@@ -194,6 +192,7 @@ const login = async (req, res) => {
         });
 
     } catch (error) {
+        console.error("Hata: login", error.message);
         return res.status(500).json({ message: error.message });
     }
 };
